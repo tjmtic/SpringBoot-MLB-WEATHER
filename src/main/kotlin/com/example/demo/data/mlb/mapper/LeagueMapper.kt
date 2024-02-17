@@ -1,5 +1,6 @@
 package com.example.demo.data.mlb.mapper
 
+import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
 import com.fasterxml.jackson.core.JsonProcessingException
@@ -7,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.core.serializer.support.SerializationFailedException
 
 object LeagueMapper {
-    fun mapTeam(json: String): Team {
+    fun mapLeague(json: String): League {
         try {
             val objectMapper = ObjectMapper()
             val teamNode = objectMapper.readTree(json)
@@ -35,26 +36,24 @@ object LeagueMapper {
             val active = teamNode["active"].asBoolean()
 
 
-            return Team(id,
+            return League(id,
                 name,
                 link,
-                venueId,
                 allStarStatus,
-                season,
                 teamCode,
                 fileCode,
-                abbreviation,
-                teamName,
-                locationName,
-                firstYearOfPlay,
+                false,
+                false,
+                0,
+                false,
                 leagueId,
                 divisionId,
-                sportId,
+                "sportId",
                 shortName,
-                parentOrgName,
-                parentOrgId,
-                franchiseName,
-                clubName,
+                false,
+                false,
+                0,
+                0,
                 active)
 
         } catch(e: JsonProcessingException){
