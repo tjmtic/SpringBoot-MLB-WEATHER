@@ -8,6 +8,10 @@ import reactor.core.publisher.Mono
 
 class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
 
+    companion object {
+        const val PATH_NAME = "league"
+    }
+
     override fun getLeagues(): LeaguesResponse {
         try {
             return getLeaguesRequest().block() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE)
@@ -21,7 +25,7 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
     private fun getLeaguesRequest(): Mono<LeaguesResponse> {
 
         return webClient.get()
-            .uri("league")
+            .uri(PATH_NAME)
             .retrieve()
             .bodyToMono(String::class.java)
             .map{ LeaguesResponseMapper.mapLeagues(it) }
@@ -43,7 +47,7 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
     private fun getLeagueRequest(id: String): Mono<LeaguesResponse> {
 
         return webClient.get()
-            .uri("league/$id")
+            .uri("${PATH_NAME}/$id")
             .retrieve()
             .bodyToMono(String::class.java)
             .map{ LeaguesResponseMapper.mapLeagues(it) }
