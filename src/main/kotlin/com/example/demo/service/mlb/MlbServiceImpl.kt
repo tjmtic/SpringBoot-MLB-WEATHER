@@ -12,6 +12,9 @@ import com.example.demo.data.mlb.model.TeamServiceResponse
 import com.example.demo.data.mlb.model.TeamsResponse
 import com.example.demo.data.mlb.model.VenueResponse
 import com.example.demo.data.mlb.model.VenuesResponse
+import com.example.demo.service.mlb.request.league.LeagueRequestImpl
+import com.example.demo.service.mlb.request.league.LeaguesResponse
+import com.example.demo.service.mlb.request.league.LeaguesServiceResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -26,9 +29,22 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         const val NOT_FOUND_TEAM = "Team: Not Found"
         const val NOT_FOUND_VENUE = "Venue: Not Found"
         const val NOT_FOUND_GAME = "Game: Not Found"
+        const val NOT_FOUND_LEAGUE = "League: Not Found"
+        //const val NOT_FOUND_DIVISION = "Division: Not Found"
+        //const val NOT_FOUND_SPORT = "Sport: Not Found"
     }
 
+    private val leagueRequests = LeagueRequestImpl(webClient)
+
     private val logger: Logger = LoggerFactory.getLogger(DemoController::class.java)
+
+    fun getLeagues(): LeaguesResponse {
+        return leagueRequests.getLeagues()
+    }
+
+    fun getLeague(id: String): LeaguesResponse {
+        return leagueRequests.getLeague(id)
+    }
 
     override fun getTeam(id: String): TeamServiceResponse {
         try {
