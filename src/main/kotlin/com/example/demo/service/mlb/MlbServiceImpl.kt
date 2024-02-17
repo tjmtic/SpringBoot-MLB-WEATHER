@@ -46,9 +46,9 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         return leagueRequests.getLeague(id)
     }
 
-    override fun getTeam(id: String): TeamServiceResponse {
+    override fun getTeam(id: String): MlbServiceResponse<TeamServiceResponse> {
         try {
-            return getTeamRequest(id).block() ?: throw MlbServiceException(NOT_FOUND_TEAM)
+            return MlbServiceResponse(getTeamRequest(id).block() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND_TEAM + e.message, e)
         } catch (e: Exception){
@@ -68,10 +68,10 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             }
     }
 
-    override fun getTeams(): TeamsResponse {
+    override fun getTeams(): MlbServiceResponse<TeamsResponse> {
         logger.debug("Entering getTeams:")
         try {
-            return getTeamsRequest().block() ?: throw MlbServiceException(NOT_FOUND_TEAM)
+            return MlbServiceResponse(getTeamsRequest().block() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
         } catch (e: MlbServiceException){
             logger.debug("getTeams: MlbService Error", e)
             throw MlbServiceException(NOT_FOUND_TEAM + e.message, e)
@@ -95,9 +95,9 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             }
     }
 
-    override fun getVenues(): VenuesResponse {
+    override fun getVenues(): MlbServiceResponse<VenuesResponse> {
         try {
-            return getVenuesRequest().block() ?: throw MlbServiceException(NOT_FOUND_VENUE)
+            return MlbServiceResponse(getVenuesRequest().block() ?: throw MlbServiceException(NOT_FOUND_VENUE), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND_VENUE, e)
         } catch (e: Exception){
@@ -117,9 +117,9 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             }
     }
 
-    override fun getVenue(id: String): VenueResponse {
+    override fun getVenue(id: String): MlbServiceResponse<VenueResponse> {
         try {
-            return getVenueRequest(id).block() ?: throw MlbServiceException(NOT_FOUND_VENUE)
+            return MlbServiceResponse(getVenueRequest(id).block() ?: throw MlbServiceException(NOT_FOUND_VENUE), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND_VENUE, e)
         } catch (e: Exception){
@@ -139,11 +139,14 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             }
     }
 
-    override fun getGames(id: String, startDate: String, endDate: String) : GamesResponse {
+    override fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<GamesResponse> {
         try {
-            return getGamesRequest(id, startDate, endDate).block() ?: throw MlbServiceException(NOT_FOUND_GAME)
+            return MlbServiceResponse(
+                getGamesRequest(id, startDate, endDate).block() ?: throw MlbServiceException(NOT_FOUND_GAME),
+                null)
         } catch (e: MlbServiceException){
-            throw MlbServiceException(NOT_FOUND_GAME, e)
+            //throw MlbServiceException(NOT_FOUND_GAME, e)
+            return MlbServiceResponse(null, MlbServiceException(NOT_FOUND_GAME))
         } catch(e: Exception){
             throw MlbServiceException("${e.message}", e)
         }
@@ -161,12 +164,11 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
 
     }
 
-    override fun getVenueForGame(id:String, date:String): GameVenueResponse {
+    override fun getVenueForGame(id:String, date:String): MlbServiceResponse<GameVenueResponse> {
         return getGames(id, date, date).let { gamesResponse ->
-            GameVenueResponse(gamesResponse.games.first(), getVenue(gamesResponse.games.first().venueId))
+            MlbServiceResponse(
+                GameVenueResponse(gamesResponse.result?.games!!.first(), getVenue(gamesResponse.result.games.first().venueId).result!!), null)
         }
     }
 
 }
-
-class MlbServiceException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
