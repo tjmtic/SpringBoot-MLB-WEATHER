@@ -7,7 +7,6 @@ import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.StandardMapping
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
-import com.example.demo.service.mlb.MlbServiceResponse
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.core.serializer.support.SerializationFailedException

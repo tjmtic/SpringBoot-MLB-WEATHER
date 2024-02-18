@@ -23,18 +23,30 @@ import reactor.core.publisher.Mono
 @Service
 class MlbServiceImpl(@Qualifier("MlbWebClient") final val webClient: WebClient) : MlbService {
 
+    companion object {
+        const val NOT_FOUND = "Game Venue: Not Found"
+        const val UNKNOWN_EXCEPTION = "MlbService - Unknown Exception"
+    }
+
     val leagueRequests = LeagueRequestImpl(webClient)
     val sportRequests = SportRequestImpl(webClient)
     val teamRequests = TeamRequestImpl(webClient)
     val venueRequests = VenueRequestImpl(webClient)
     val gameRequests = GameRequestImpl(webClient)
 
-    private val logger: Logger = LoggerFactory.getLogger(DemoController::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(MlbServiceImpl::class.java)
 
-    override fun getVenueForGame(id:String, date:String): MlbServiceResponse<GameVenueResponse> {
-        return gameRequests.getGames(id, date, date).let { gamesResponse ->
-            MlbServiceResponse(
-                GameVenueResponse(gamesResponse.result?.first()!!, venueRequests.getVenue(gamesResponse.result.first().venueId).result!!), null)
+    override fun getVenueForGame(id:String, date:String): GameVenueResponse {
+        return try {
+            gameRequests.getGames(id, date, date).let { gameResponse: List<Game> ->
+                gameResponse.first().let {
+                    GameVenueResponse(it, venueRequests.getVenue(it.venueId))
+                }
+            }
+        } catch(e: MlbServiceException){
+            throw MlbServiceException(NOT_FOUND + e.message, e)
+        } catch(e: Exception){
+            throw MlbServiceException(UNKNOWN_EXCEPTION + e.message, e)
         }
     }
 

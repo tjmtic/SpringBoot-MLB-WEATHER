@@ -60,7 +60,7 @@ interface MlbService {
      * Returns:
      * - GameVenueResponse: An object containing venue information associated with the specified MLB game.
      */
-    fun getVenueForGame(id:String, date:String): MlbServiceResponse<GameVenueResponse>
+    fun getVenueForGame(id:String, date:String): GameVenueResponse
 }
-data class MlbServiceResponse<T>(val result: T?, val error: MlbServiceException?)
+//data class MlbServiceResponse<T>(val result: T?, val error: MlbServiceException?)
 class MlbServiceException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)

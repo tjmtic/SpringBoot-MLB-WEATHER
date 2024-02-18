@@ -3,8 +3,6 @@ package com.example.demo.service.mlb.request.team
 import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.service.mlb.MlbServiceException
-import com.example.demo.service.mlb.MlbServiceImpl
-import com.example.demo.service.mlb.MlbServiceResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
@@ -15,11 +13,9 @@ class TeamRequestImpl(val webClient: WebClient) {
         const val NOT_FOUND = "Team: Not Found"
     }
 
-    fun getTeam(id: String): MlbServiceResponse<Team> {
+    fun getTeam(id: String): Team {
         try {
-            return MlbServiceResponse(getTeamRequest(id).block()?.first() ?: throw MlbServiceException(
-                NOT_FOUND
-            ), null)
+            return getTeamRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
@@ -39,12 +35,10 @@ class TeamRequestImpl(val webClient: WebClient) {
             }
     }
 
-    fun getTeams(): MlbServiceResponse<List<Team>> {
+    fun getTeams(): List<Team> {
         //logger.debug("Entering getTeams:")
         try {
-            return MlbServiceResponse(getTeamsRequest().block()?.filterNotNull() ?: throw MlbServiceException(
-                NOT_FOUND
-            ), null)
+            return getTeamsRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
             //logger.debug("getTeams: MlbService Error", e)
             throw MlbServiceException(NOT_FOUND + e.message, e)
