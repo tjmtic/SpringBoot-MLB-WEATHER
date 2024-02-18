@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 class VenueRequestImpl(val webClient: WebClient) {
 
     companion object {
-        const val PATH_NAME = "Venues"
+        const val PATH_NAME = "venues"
         const val NOT_FOUND = "Venue: Not Found"
     }
 
@@ -39,7 +39,7 @@ class VenueRequestImpl(val webClient: WebClient) {
         try {
             return getVenueRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
-            throw MlbServiceException(NOT_FOUND, e)
+            throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
             throw MlbServiceException("${e.message}", e)
         }
