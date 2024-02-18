@@ -1,10 +1,9 @@
 package com.example.demo.service.mlb
 
 import com.example.demo.controller.DemoController
-import com.example.demo.data.mlb.mapper.GamesResponseMapper
 import com.example.demo.data.mlb.mapper.ResponseMapper
+import com.example.demo.data.mlb.model.Game
 import com.example.demo.data.mlb.model.GameVenueResponse
-import com.example.demo.data.mlb.model.GamesResponse
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
@@ -25,7 +24,7 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         const val NOT_FOUND_TEAM = "Team: Not Found"
         const val NOT_FOUND_VENUE = "Venue: Not Found"
         const val NOT_FOUND_GAME = "Game: Not Found"
-        const val NOT_FOUND_LEAGUE = "League: Not Found"
+        //const val NOT_FOUND_LEAGUE = "League: Not Found"
         //const val NOT_FOUND_DIVISION = "Division: Not Found"
         //const val NOT_FOUND_SPORT = "Sport: Not Found"
     }
@@ -144,10 +143,10 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             }
     }
 
-    override fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<GamesResponse> {
+    override fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<List<Game>> {
         try {
             return MlbServiceResponse(
-                getGamesRequest(id, startDate, endDate).block() ?: throw MlbServiceException(NOT_FOUND_GAME),
+                getGamesRequest(id, startDate, endDate).block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND_GAME),
                 null)
         } catch (e: MlbServiceException){
             //throw MlbServiceException(NOT_FOUND_GAME, e)
@@ -157,12 +156,12 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         }
     }
 
-   private fun getGamesRequest(id: String, startDate: String, endDate: String): Mono<GamesResponse> {
+   private fun getGamesRequest(id: String, startDate: String, endDate: String): Mono<List<Game?>> {
         return webClient.get()
             .uri("schedule?scheduleTypes=games&sportIds=1&teamIds=$id&startDate=$startDate&endDate=$endDate")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ GamesResponseMapper.mapGames(it) }
+            .map{ ResponseMapper<Game>().map<Game>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
@@ -172,7 +171,7 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
     override fun getVenueForGame(id:String, date:String): MlbServiceResponse<GameVenueResponse> {
         return getGames(id, date, date).let { gamesResponse ->
             MlbServiceResponse(
-                GameVenueResponse(gamesResponse.result?.games!!.first(), getVenue(gamesResponse.result.games.first().venueId).result!!), null)
+                GameVenueResponse(gamesResponse.result?.first()!!, getVenue(gamesResponse.result.first().venueId).result!!), null)
         }
     }
 

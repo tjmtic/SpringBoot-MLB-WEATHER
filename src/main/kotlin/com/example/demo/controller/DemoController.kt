@@ -133,14 +133,14 @@ class DemoController(val demoService: DemoServiceImpl,
     }
 
     @GetMapping("/getTeam/{id}")
-    fun getTeam(@PathVariable @ValidId id: String): ResponseEntity<TeamResponse> {
+    fun getTeam(@PathVariable @ValidId id: String): ResponseEntity<MlbServiceResponse<Team>> {
         return try {
             val res : MlbServiceResponse<Team> = mlbService.getTeam(id)
-            ResponseEntity.ok(TeamResponse(res.result, null))
+            ResponseEntity.ok(res)
         } catch (e: MlbServiceException){
-            ResponseEntity.status(400).body(TeamResponse(null, "Service Error - ${e.message}"))
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException("Service Error - ${e.message}")))
         } catch (e: Exception){
-            ResponseEntity.status(400).body(TeamResponse(null, ERROR_UNKNOWN))
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException(ERROR_UNKNOWN)))
         }
     }
 
