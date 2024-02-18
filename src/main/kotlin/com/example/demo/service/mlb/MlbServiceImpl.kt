@@ -2,6 +2,7 @@ package com.example.demo.service.mlb
 
 import com.example.demo.controller.DemoController
 import com.example.demo.data.mlb.mapper.GamesResponseMapper
+import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.mapper.TeamResponseMapper
 import com.example.demo.data.mlb.mapper.TeamsResponseMapper
 import com.example.demo.data.mlb.mapper.VenueResponseMapper
@@ -10,6 +11,7 @@ import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.GamesResponse
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
+import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.TeamServiceResponse
 import com.example.demo.data.mlb.model.TeamsResponse
 import com.example.demo.data.mlb.model.VenueResponse
@@ -56,9 +58,9 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         return sportRequests.getSport(id)
     }
 
-    override fun getTeam(id: String): MlbServiceResponse<TeamServiceResponse> {
+    override fun getTeam(id: String): MlbServiceResponse<Team> {
         try {
-            return MlbServiceResponse(getTeamRequest(id).block() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
+            return MlbServiceResponse(getTeamRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND_TEAM + e.message, e)
         } catch (e: Exception){
@@ -66,22 +68,22 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         }
     }
 
-    private fun getTeamRequest(id: String): Mono<TeamServiceResponse> {
+    private fun getTeamRequest(id: String): Mono<List<Team?>> {
 
         return webClient.get()
             .uri("teams/$id")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ TeamResponseMapper.mapTeam(it) }
+            .map{ ResponseMapper<Team>().map<Team>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
     }
 
-    override fun getTeams(): MlbServiceResponse<TeamsResponse> {
+    override fun getTeams(): MlbServiceResponse<List<Team>> {
         logger.debug("Entering getTeams:")
         try {
-            return MlbServiceResponse(getTeamsRequest().block() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
+            return MlbServiceResponse(getTeamsRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
         } catch (e: MlbServiceException){
             logger.debug("getTeams: MlbService Error", e)
             throw MlbServiceException(NOT_FOUND_TEAM + e.message, e)
@@ -91,7 +93,7 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         }
     }
 
-    private fun getTeamsRequest(): Mono<TeamsResponse> {
+    private fun getTeamsRequest(): Mono<List<Team?>> {
 
         println("GETTING TEAMS REQUEST")
 
@@ -99,7 +101,7 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             .uri("teams")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ println(it);TeamsResponseMapper.mapTeams(it) }
+            .map{ ResponseMapper<Team>().map<Team>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message} ERROR MAP ERROR", it)
             }

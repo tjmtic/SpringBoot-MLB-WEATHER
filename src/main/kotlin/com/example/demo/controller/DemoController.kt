@@ -5,6 +5,8 @@ import com.example.demo.data.demo.model.GameDateResponse
 import com.example.demo.data.demo.validation.DateValidator
 import com.example.demo.data.demo.validation.ValidId
 import com.example.demo.data.demo.validation.ValidationState
+import com.example.demo.data.mlb.model.League
+import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.TeamServiceResponse
 import com.example.demo.data.mlb.model.TeamsResponse
@@ -121,7 +123,7 @@ class DemoController(val demoService: DemoServiceImpl,
     fun getTeams(): ResponseEntity<String> {
         logger.debug("Entering getTeams:")
         return try {
-            val res : MlbServiceResponse<TeamsResponse> = mlbService.getTeams()
+            val res : MlbServiceResponse<List<Team>> = mlbService.getTeams()
             logger.debug(":Exiting getTeams.")
             ResponseEntity.ok(res.result.toString())
         } catch (e: MlbServiceException){
@@ -136,12 +138,60 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getTeam/{id}")
     fun getTeam(@PathVariable @ValidId id: String): ResponseEntity<TeamResponse> {
         return try {
-            val res : MlbServiceResponse<TeamServiceResponse> = mlbService.getTeam(id)
-            ResponseEntity.ok(TeamResponse(res.result!!.team, null))
+            val res : MlbServiceResponse<Team> = mlbService.getTeam(id)
+            ResponseEntity.ok(TeamResponse(res.result, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(TeamResponse(null, "Service Error - ${e.message}"))
         } catch (e: Exception){
             ResponseEntity.status(400).body(TeamResponse(null, ERROR_UNKNOWN))
+        }
+    }
+
+    @GetMapping("/getLeague/{id}")
+    fun getLeague(@PathVariable @ValidId id: String): ResponseEntity<MlbServiceResponse<League>> {
+        return try {
+            val res : MlbServiceResponse<League> = mlbService.getLeague(id)
+            ResponseEntity.ok(MlbServiceResponse(res.result, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getLeagues/")
+    fun getLeagues(): ResponseEntity<MlbServiceResponse<List<League>>> {
+        return try {
+            val res : MlbServiceResponse<List<League>> = mlbService.getLeagues()
+            ResponseEntity.ok(MlbServiceResponse(res.result, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getSport/{id}")
+    fun getSport(@PathVariable @ValidId id: String): ResponseEntity<MlbServiceResponse<Sport>> {
+        return try {
+            val res : MlbServiceResponse<Sport> = mlbService.getSport(id)
+            ResponseEntity.ok(MlbServiceResponse(res.result, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getSports/")
+    fun getSports(): ResponseEntity<MlbServiceResponse<List<Sport>>> {
+        return try {
+            val res : MlbServiceResponse<List<Sport>> = mlbService.getSports()
+            ResponseEntity.ok(MlbServiceResponse(res.result, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(MlbServiceResponse(null, MlbServiceException(ERROR_UNKNOWN)))
         }
     }
 }

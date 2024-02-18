@@ -21,4 +21,19 @@ object TeamResponseMapper {
             throw SerializationFailedException("TeamResponse Serialization Error", e)
         }
     }
+
+    fun <T> mapListForNode(node: String, json: String, mapIt: T): List<T> {
+        try {
+            val objectMapper = ObjectMapper()
+            val responseNode = objectMapper.readTree(json)
+
+            val teamsNode = responseNode[node]
+            val teams = teamsNode.map { mapIt }
+
+            return teams
+
+        } catch(e: JsonProcessingException){
+            throw SerializationFailedException("TeamResponse Serialization Error", e)
+        }
+    }
 }
