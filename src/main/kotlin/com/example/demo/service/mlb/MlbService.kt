@@ -3,10 +3,7 @@ package com.example.demo.service.mlb
 import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.GamesResponse
 import com.example.demo.data.mlb.model.Team
-import com.example.demo.data.mlb.model.TeamServiceResponse
-import com.example.demo.data.mlb.model.TeamsResponse
-import com.example.demo.data.mlb.model.VenueResponse
-import com.example.demo.data.mlb.model.VenuesResponse
+import com.example.demo.data.mlb.model.Venue
 
 interface MlbService {
 
@@ -34,7 +31,7 @@ interface MlbService {
      * Returns:
      * - VenueResponse: An object containing information about the venues associated with the specified MLB entity.
      */
-    fun getVenue(id: String): MlbServiceResponse<VenueResponse>
+    fun getVenue(id: String): MlbServiceResponse<Venue>
 
     /**
      * Action: Retrieve venues associated with MLB.
@@ -42,7 +39,7 @@ interface MlbService {
      * Returns:
      * - VenueResponse: An object containing information about the venues associated with the MLB.
      */
-    fun getVenues(): MlbServiceResponse<VenuesResponse>
+    fun getVenues(): MlbServiceResponse<List<Venue>>
 
     /**
      * Action: Retrieve MLB games within a specified date range.

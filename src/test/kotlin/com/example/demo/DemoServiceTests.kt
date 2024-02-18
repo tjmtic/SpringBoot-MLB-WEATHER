@@ -2,7 +2,6 @@ package com.example.demo
 
 import com.example.demo.data.demo.model.VenueForecastResponse
 import com.example.demo.data.demo.model.GameDateResponse
-import com.example.demo.data.mlb.model.VenueResponse
 import com.example.demo.data.mlb.model.GameResponse
 import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.DefaultCoordinates
@@ -47,12 +46,12 @@ class DemoServiceTests {
         val mockedDefaultCoordinates = DefaultCoordinates(0.0, 0.0)
         val mockedVenueLocation = VenueLocation("Name", "City", "State", mockedDefaultCoordinates)
         val mockedVenue = Venue(0, "Name", "City", mockedVenueLocation)
-        val mockedVenueResponse = VenueResponse(mockedVenue)
+        //val mockedVenueResponse = VenueResponse(mockedVenue)
         val mockedForecastResponse = ForecastResponse(Period(1, "", "", "", "", ""))
         val mockedVenueForecastResponse = VenueForecastResponse(mockedVenue, mockedForecastResponse)
         val mockedGame = Game("1", "home", "away")
-        val mockedGameResponse = GameResponse("1", "home", "away")
-        val mockedGameVenueResponse = GameVenueResponse(mockedGame, mockedVenueResponse)
+        //val mockedGameResponse = GameResponse("1", "home", "away")
+        val mockedGameVenueResponse = GameVenueResponse(mockedGame, mockedVenue)
         val mockedGameDateResponse = GameDateResponse("2022-01-02", mockedGame, mockedForecastResponse)
 
         const val DEFAULT_RESPONSE = "Service - Exception"
@@ -63,7 +62,7 @@ class DemoServiceTests {
     @BeforeEach
     fun setupMocks(){
         // Define the behavior of the mocked client
-        Mockito.`when`(mlbService.getVenue("1")).thenReturn(MlbServiceResponse(mockedVenueResponse, null))
+        Mockito.`when`(mlbService.getVenue("1")).thenReturn(MlbServiceResponse(mockedVenue, null))
         Mockito.`when`(mlbService.getVenue("2")).thenReturn(null)
         Mockito.`when`(weatherService.getForecastForLocation(0.0, 0.0)).thenReturn(mockedForecastResponse)
         Mockito.`when`(mlbService.getVenueForGame("1", "2022-01-02")).thenReturn(MlbServiceResponse(mockedGameVenueResponse, null))

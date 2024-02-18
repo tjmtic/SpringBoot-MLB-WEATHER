@@ -10,7 +10,6 @@ import com.example.demo.data.mlb.model.GameResponse
 import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.Venue
 import com.example.demo.data.mlb.model.VenueLocation
-import com.example.demo.data.mlb.model.VenueResponse
 import com.example.demo.data.weather.model.ForecastResponse
 import com.example.demo.data.weather.model.Period
 import com.example.demo.service.demo.DemoServiceImpl
@@ -53,12 +52,12 @@ class DemoControllerTests {
 		val mockedDefaultCoordinates = DefaultCoordinates(0.0, 0.0)
 		val mockedVenueLocation = VenueLocation("Name", "City", "State", mockedDefaultCoordinates)
 		val mockedVenue = Venue(0, "Name", "City", mockedVenueLocation)
-		val mockedVenueResponse = VenueResponse(mockedVenue)
+		//val mockedVenueResponse = VenueResponse(mockedVenue)
 		val mockedForecastResponse = ForecastResponse(Period(1, "Temp", "Un", "0", "N", "Short Forecast"))
 		val mockedVenueForecastResponse = VenueForecastResponse(mockedVenue, mockedForecastResponse)
 		val mockedGame = Game("1", "home", "away")
-		val mockedGameResponse = GameResponse("1", "home", "away")
-		val mockedGameVenueResponse = GameVenueResponse(mockedGame, mockedVenueResponse)
+		//val mockedGameResponse = GameResponse("1", "home", "away")
+		//val mockedGameVenueResponse = GameVenueResponse(mockedGame, mockedVenue)
 		val mockedGameDateResponse = GameDateResponse("2022-01-02", mockedGame, mockedForecastResponse)
 	}
 

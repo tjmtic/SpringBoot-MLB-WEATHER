@@ -8,10 +8,7 @@ import com.example.demo.data.demo.validation.ValidationState
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
-import com.example.demo.data.mlb.model.TeamServiceResponse
-import com.example.demo.data.mlb.model.TeamsResponse
-import com.example.demo.data.mlb.model.VenueResponse
-import com.example.demo.data.mlb.model.VenuesResponse
+import com.example.demo.data.mlb.model.Venue
 import com.example.demo.network.TeamResponse
 import com.example.demo.service.demo.DemoServiceException
 import com.example.demo.service.demo.DemoServiceImpl
@@ -98,7 +95,7 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getVenues/")
     fun getVenues(): ResponseEntity<String> {
         return try {
-            val res : MlbServiceResponse<VenuesResponse> = mlbService.getVenues()
+            val res : MlbServiceResponse<List<Venue>> = mlbService.getVenues()
             ResponseEntity.ok(res.toString())
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body("Service Error - ${e.message}")
@@ -110,7 +107,7 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getVenue/{id}")
     fun getVenue(@PathVariable @ValidId id: String): ResponseEntity<String> {
         return try {
-            val res : MlbServiceResponse<VenueResponse> = mlbService.getVenue(id)
+            val res : MlbServiceResponse<Venue> = mlbService.getVenue(id)
             ResponseEntity.ok(res.toString())
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body("Service Error - ${e.message}")
