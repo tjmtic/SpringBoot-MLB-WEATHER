@@ -94,7 +94,7 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getVenues/")
     fun getVenues(): ResponseEntity<ServiceResponse<List<Venue>>> {
         return try {
-            val res : MlbServiceResponse<List<Venue>> = mlbService.getVenues()
+            val res : MlbServiceResponse<List<Venue>> = mlbService.venueRequests.getVenues()
             ResponseEntity.ok(ServiceResponse(res.result, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
@@ -106,7 +106,7 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getVenue/{id}")
     fun getVenue(@PathVariable @ValidId id: String): ResponseEntity<ServiceResponse<Venue>> {
         return try {
-            val res : MlbServiceResponse<Venue> = mlbService.getVenue(id)
+            val res : MlbServiceResponse<Venue> = mlbService.venueRequests.getVenue(id)
             ResponseEntity.ok(ServiceResponse(res.result, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
