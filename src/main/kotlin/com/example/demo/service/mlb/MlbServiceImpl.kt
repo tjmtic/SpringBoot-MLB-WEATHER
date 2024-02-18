@@ -10,6 +10,7 @@ import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
 import com.example.demo.service.mlb.request.league.LeagueRequestImpl
 import com.example.demo.service.mlb.request.sport.SportRequestImpl
+import com.example.demo.service.mlb.request.team.TeamRequestImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -21,7 +22,7 @@ import reactor.core.publisher.Mono
 class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbService {
 
     companion object {
-        const val NOT_FOUND_TEAM = "Team: Not Found"
+        //const val NOT_FOUND_TEAM = "Team: Not Found"
         const val NOT_FOUND_VENUE = "Venue: Not Found"
         const val NOT_FOUND_GAME = "Game: Not Found"
         //const val NOT_FOUND_LEAGUE = "League: Not Found"
@@ -29,28 +30,14 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         //const val NOT_FOUND_SPORT = "Sport: Not Found"
     }
 
-    private val leagueRequests = LeagueRequestImpl(webClient)
-    private val sportRequests = SportRequestImpl(webClient)
+    val leagueRequests = LeagueRequestImpl(webClient)
+    val sportRequests = SportRequestImpl(webClient)
+    val teamRequests = TeamRequestImpl(webClient)
 
     private val logger: Logger = LoggerFactory.getLogger(DemoController::class.java)
 
-    fun getLeagues(): MlbServiceResponse<List<League>> {
-        return leagueRequests.getLeagues()
-    }
 
-    fun getLeague(id: String): MlbServiceResponse<League> {
-        return leagueRequests.getLeague(id)
-    }
-
-    fun getSports(): MlbServiceResponse<List<Sport>> {
-        return sportRequests.getSports()
-    }
-
-    fun getSport(id: String): MlbServiceResponse<Sport> {
-        return sportRequests.getSport(id)
-    }
-
-    override fun getTeam(id: String): MlbServiceResponse<Team> {
+   /* override fun getTeam(id: String): MlbServiceResponse<Team> {
         try {
             return MlbServiceResponse(getTeamRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND_TEAM), null)
         } catch (e: MlbServiceException){
@@ -97,7 +84,7 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             .onErrorMap {
                 MlbServiceException("${it.message} ERROR MAP ERROR", it)
             }
-    }
+    }*/
 
     override fun getVenues(): MlbServiceResponse<List<Venue>> {
         try {
