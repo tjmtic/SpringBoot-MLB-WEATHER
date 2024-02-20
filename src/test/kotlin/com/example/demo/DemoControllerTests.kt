@@ -44,8 +44,8 @@ class DemoControllerTests {
 	companion object {
 		const val SUCCESS_VENUEFORECAST = "Venue Forecast Info: City Name 0"
 		const val SUCCESS_GAMEDATE = "Game Date Info: 2022-01-02 home away TempUn"
-		const val ERROR_DATE_PAST = "Invalid Date - Day in the Past"
-		const val ERROR_DATE_FUTURE = "Invalid Date - Day in the Future"
+		const val ERROR_DATE_PAST = "Invalid Request - [Day in the Past]"
+		const val ERROR_DATE_FUTURE = "Invalid Request - [Day in the Future]"
 
 		val mockedDefaultCoordinates = DefaultCoordinates(0.0, 0.0)
 		val mockedVenueLocation = VenueLocation("Name", "City", "State", mockedDefaultCoordinates)

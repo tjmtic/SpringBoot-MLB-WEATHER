@@ -21,10 +21,19 @@ class DemoValidationTests {
         every { DateValidator.getCurrentDateAsString("yyyy-MM-dd") } returns "2022-01-02"
     }
 
+    fun validate(states: List<() -> ValidationState>): List<ValidationState.INVALID>{
+        return states.map{ println("Validation something"); it() }.filterIsInstance<ValidationState.INVALID>()
+    }
+
     @Test
     fun `Test Date Validation INVALID - NULL`(){
         val invalidDate = DateValidator.validateDateForTimespan("", 0)
         assertEquals(ValidationState.INVALID("Invalid Datetime"), invalidDate)
+
+        val x = listOf({DateValidator.validateDateForTimespan("", 0)})
+
+        val y = validate(x)
+        assertEquals(listOf(ValidationState.INVALID("Invalid Datetime")), y)
     }
 
     @Test
