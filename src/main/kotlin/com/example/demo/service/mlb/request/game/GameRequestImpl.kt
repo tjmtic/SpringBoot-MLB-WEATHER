@@ -26,11 +26,12 @@ class GameRequestImpl(val webClient: WebClient) {
         }
     }
 
-    private fun getGamesRequest(id: String, startDate: String, endDate: String): Mono<List<Game?>> {
+    private fun getGamesRequest(id: String, startDate: String, endDate: String,
+                                scheduleTypes: String = "games", sportIds: String = "1"): Mono<List<Game?>> {
 
         val uriFull = UriComponentsBuilder.fromPath(PATH_NAME)
-            .queryParam("scheduleTypes", "games")
-            .queryParam("sportIds", "1")
+            .queryParam("scheduleTypes", scheduleTypes)
+            .queryParam("sportIds", sportIds)
             .queryParam("teamIds", id)
             .queryParam("startDate", startDate)
             .queryParam("endDate", endDate)

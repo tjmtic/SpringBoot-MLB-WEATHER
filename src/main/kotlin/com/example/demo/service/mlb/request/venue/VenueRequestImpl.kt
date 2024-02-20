@@ -46,10 +46,10 @@ class VenueRequestImpl(val webClient: WebClient) {
         }
     }
 
-    private fun getVenueRequest(id: String): Mono<List<Venue?>> {
+    private fun getVenueRequest(id: String, hydrate: String = "location"): Mono<List<Venue?>> {
 
         val uriFull = UriComponentsBuilder.fromPath("$PATH_NAME/$id")
-            .queryParam("hydrate", "location")
+            .queryParam("hydrate", hydrate)
             .buildAndExpand(id)
             .toUri()
 
