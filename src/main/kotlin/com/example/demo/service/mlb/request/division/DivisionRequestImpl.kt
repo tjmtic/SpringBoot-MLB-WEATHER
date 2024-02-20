@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono
 class DivisionRequestImpl(val webClient: WebClient) {
 
     companion object {
-        const val PATH_NAME = "division"
+        const val PATH_NAME = "divisions"
         const val NOT_FOUND = "Division: Not Found"
     }
 
