@@ -4,6 +4,7 @@ import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.Venue
 import com.example.demo.service.mlb.MlbServiceException
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 
 class VenueRequestImpl(val webClient: WebClient) {
@@ -47,8 +48,13 @@ class VenueRequestImpl(val webClient: WebClient) {
 
     private fun getVenueRequest(id: String): Mono<List<Venue?>> {
 
+        val uriFull = UriComponentsBuilder.fromPath("$PATH_NAME/$id")
+            .queryParam("hydrate", "location")
+            .buildAndExpand(id)
+            .toUri()
+
         return webClient.get()
-            .uri("$PATH_NAME/$id?hydrate=location")
+            .uri(uriFull)
             .retrieve()
             .bodyToMono(String::class.java)
             .map{ ResponseMapper<Venue>().map<Venue>(it) }

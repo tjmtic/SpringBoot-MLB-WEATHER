@@ -3,7 +3,9 @@ package com.example.demo.service.mlb.request.game
 import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.Game
 import com.example.demo.service.mlb.MlbServiceException
+import com.example.demo.service.mlb.request.venue.VenueRequestImpl
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 
 class GameRequestImpl(val webClient: WebClient) {
@@ -25,8 +27,18 @@ class GameRequestImpl(val webClient: WebClient) {
     }
 
     private fun getGamesRequest(id: String, startDate: String, endDate: String): Mono<List<Game?>> {
+
+        val uriFull = UriComponentsBuilder.fromPath(PATH_NAME)
+            .queryParam("scheduleTypes", "games")
+            .queryParam("sportIds", "1")
+            .queryParam("teamIds", id)
+            .queryParam("startDate", startDate)
+            .queryParam("endDate", endDate)
+            .buildAndExpand(id)
+            .toUri()
+
         return webClient.get()
-            .uri("$PATH_NAME?scheduleTypes=games&sportIds=1&teamIds=$id&startDate=$startDate&endDate=$endDate")
+            .uri(uriFull)
             .retrieve()
             .bodyToMono(String::class.java)
             .map{ ResponseMapper<Game>().map<Game>(it) }
