@@ -30,7 +30,7 @@ class VenueRequestImpl(val webClient: WebClient) {
             .uri("$PATH_NAME/")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ ResponseMapper<Venue>().map<Venue>(it) }
+            .map{ println("RESPONSE NO ERROR $it"); ResponseMapper<Venue>().map<Venue>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
@@ -53,11 +53,13 @@ class VenueRequestImpl(val webClient: WebClient) {
             .buildAndExpand(id)
             .toUri()
 
+        println("REQUESTING FULL URL OF: ${uriFull}")
+
         return webClient.get()
-            .uri(uriFull)
+            .uri("venues/${id}?hydrate=location")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ ResponseMapper<Venue>().map<Venue>(it) }
+            .map{println("RESPONSE NO ERROR $it"); ResponseMapper<Venue>().map<Venue>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
