@@ -16,7 +16,7 @@ object ForecastResponseMapper {
 
             val periods = periodNode.map { PeriodMapper.mapPeriod(it.toString()) }
 
-            return ForecastResponse(periods.first())
+            return ForecastResponse(periods)
         } catch(e: JsonProcessingException){
             throw SerializationFailedException("ForecastResponse Serialization Failure", e)
         } catch(e: Exception){

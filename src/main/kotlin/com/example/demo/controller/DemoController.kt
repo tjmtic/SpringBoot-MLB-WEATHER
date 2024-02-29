@@ -257,10 +257,10 @@ class DemoController(val demoService: DemoServiceImpl,
     }
 
     @GetMapping("/getForecast/{lat}/{lon}")
-    fun getForecast(@PathVariable lat: Double, @PathVariable lon: Double): ResponseEntity<ServiceResponse<ForecastResponse>> {
+    fun getForecast(@PathVariable lat: Double, @PathVariable lon: Double): ResponseEntity<ServiceResponse<List<Period>>> {
         return try {
             val res : ForecastResponse = weatherService.getForecastForLocation(lat, lon)
-            ResponseEntity.ok(ServiceResponse(res, null))
+            ResponseEntity.ok(ServiceResponse(res.periods, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
         } catch (e: Exception){
