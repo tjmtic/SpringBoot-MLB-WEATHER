@@ -24,8 +24,10 @@ class FbServiceImpl(@Qualifier("FbWebClient") val webClient: WebClient): FbServi
 
     //TODO: Should come from FB LOGIN action
     @Autowired
+    @Qualifier("fbId")
     private lateinit var FB_ID: String
     @Autowired
+    @Qualifier("fbToken")
     private lateinit var FB_TOKEN: String
 
     internal fun postIg(imageUrl: String, caption: String): String {
