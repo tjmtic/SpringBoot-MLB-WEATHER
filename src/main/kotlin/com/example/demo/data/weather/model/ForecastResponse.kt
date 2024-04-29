@@ -1,3 +1,3 @@
 package com.example.demo.data.weather.model
 
-data class ForecastResponse(val period: Period)
+data class ForecastResponse(val periods: List<Period>)

@@ -30,8 +30,8 @@ class DemoServiceImpl(val mlbService: MlbServiceImpl, val weatherService: Weathe
 
                 logger.debug("Returning getForecastForVenue($id):")
 
-                val lat = venueResponse.venueLocation.defaultCoordinates.latitude
-                val lon = venueResponse.venueLocation.defaultCoordinates.longitude
+                val lat = venueResponse.venueLocation?.defaultCoordinates?.latitude ?: throw WeatherServiceException("Invalid Location Provided")
+                val lon = venueResponse.venueLocation?.defaultCoordinates?.longitude ?: throw WeatherServiceException("Invalid Location Provided")
 
                 VenueForecastResponse(
                     venueResponse,
@@ -56,8 +56,8 @@ class DemoServiceImpl(val mlbService: MlbServiceImpl, val weatherService: Weathe
 
                 logger.debug("Returning getGamesByDate($id , $date):")
 
-                val lat = response.venue.venueLocation.defaultCoordinates.latitude
-                val lon = response.venue.venueLocation.defaultCoordinates.longitude
+                val lat = response.venue.venueLocation?.defaultCoordinates?.latitude ?: throw WeatherServiceException("Invalid Location Provided")
+                val lon = response.venue.venueLocation?.defaultCoordinates?.longitude ?: throw WeatherServiceException("Invalid Location Provided")
 
                 GameDateResponse(date, response.game,
                     weatherService.getForecastForLocation(lat, lon)
