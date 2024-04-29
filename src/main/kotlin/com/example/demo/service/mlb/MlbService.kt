@@ -31,7 +31,7 @@ interface MlbService {
      * Returns:
      * - VenueResponse: An object containing information about the venues associated with the specified MLB entity.
      */
-    fun getVenue(id: String): MlbServiceResponse<Venue>
+    //fun getVenue(id: String): MlbServiceResponse<Venue>
 
     /**
      * Action: Retrieve venues associated with MLB.
@@ -39,7 +39,7 @@ interface MlbService {
      * Returns:
      * - VenueResponse: An object containing information about the venues associated with the MLB.
      */
-    fun getVenues(): MlbServiceResponse<List<Venue>>
+    //fun getVenues(): MlbServiceResponse<List<Venue>>
 
     /**
      * Action: Retrieve MLB games within a specified date range.
@@ -50,7 +50,7 @@ interface MlbService {
      * Returns:
      * - GamesResponse: An object containing information about the MLB games within the specified date range.
      */
-    fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<List<Game>>
+    //fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<List<Game>>
 
     /**
      * Action: Retrieve venue information associated with a specific MLB game.
