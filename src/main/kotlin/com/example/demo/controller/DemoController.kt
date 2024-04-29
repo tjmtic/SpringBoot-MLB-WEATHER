@@ -73,14 +73,20 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/test2/{id}")
     fun test2(@PathVariable @ValidId id: String, @RequestParam date: String, @RequestParam daysInFuture: Int = 7): ResponseEntity<String> {
         return try {
-            //TODO: Abstract out (List<PropertyValidator> -> ValidationState)
-            when(val state: ValidationState = DateValidator.validateDateForTimespan(date, daysInFuture)){
-                is ValidationState.VALID -> {
+            //Implement Validators List
+            val dateValidator = { DateValidator.validateDateForTimespan(date, daysInFuture) }
+            val listOfValidators = listOf(dateValidator)
+
+            when(val state: List<String> = ValidationState.validate(listOfValidators)){
+                //No Validation Error Messages, good to go forward
+                emptyList<String>() -> {
                     val res : GameDateResponse = demoService.getGamesByDate(id, date)
                     ResponseEntity.ok(res.toString())
                 }
-                is ValidationState.INVALID -> {
-                    ResponseEntity.ok("Invalid Date - ${state.message}")
+                //else send back validation errors
+                else -> {
+                    val messages = state.map { it }
+                    ResponseEntity.ok("Invalid Request - ${messages}")
                 }
             }
            } catch (e: DemoServiceException){
@@ -89,6 +95,10 @@ class DemoController(val demoService: DemoServiceImpl,
             ResponseEntity.status(400).body(ERROR_UNKNOWN)
         }
     }
+
+    /*private fun validate(states: List<() -> ValidationState>): List<String>{
+        return states.map{ it() }.filterIsInstance<ValidationState.INVALID>().map { it.message }
+    }*/
 
     @GetMapping("/getVenues/")
     fun getVenues(): ResponseEntity<ServiceResponse<List<Venue>>> {
