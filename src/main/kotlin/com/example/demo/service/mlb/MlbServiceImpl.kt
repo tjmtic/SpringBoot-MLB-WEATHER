@@ -8,6 +8,7 @@ import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
+import com.example.demo.service.mlb.request.division.DivisionRequestImpl
 import com.example.demo.service.mlb.request.game.GameRequestImpl
 import com.example.demo.service.mlb.request.league.LeagueRequestImpl
 import com.example.demo.service.mlb.request.sport.SportRequestImpl
@@ -33,6 +34,7 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") final val webClient: WebClient) 
     val teamRequests = TeamRequestImpl(webClient)
     val venueRequests = VenueRequestImpl(webClient)
     val gameRequests = GameRequestImpl(webClient)
+    val divisionRequests = DivisionRequestImpl(webClient)
 
     private val logger: Logger = LoggerFactory.getLogger(MlbServiceImpl::class.java)
 

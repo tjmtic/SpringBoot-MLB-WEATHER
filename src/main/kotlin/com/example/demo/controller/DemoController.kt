@@ -5,6 +5,7 @@ import com.example.demo.data.demo.model.GameDateResponse
 import com.example.demo.data.demo.validation.DateValidator
 import com.example.demo.data.demo.validation.ValidId
 import com.example.demo.data.demo.validation.ValidationState
+import com.example.demo.data.mlb.model.Division
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
@@ -192,6 +193,30 @@ class DemoController(val demoService: DemoServiceImpl,
     fun getSports(): ResponseEntity<ServiceResponse<List<Sport>>> {
         return try {
             val res : List<Sport> = mlbService.sportRequests.getSports()
+            ResponseEntity.ok(ServiceResponse(res, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getDivision/{id}")
+    fun getDivision(@PathVariable @ValidId id: String): ResponseEntity<ServiceResponse<Division>> {
+        return try {
+            val res : Division? = mlbService.divisionRequests.getDivision(id)
+            ResponseEntity.ok(ServiceResponse(res, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getDivisions/")
+    fun getDivisions(): ResponseEntity<ServiceResponse<List<Division>>> {
+        return try {
+            val res : List<Division> = mlbService.divisionRequests.getDivisions()
             ResponseEntity.ok(ServiceResponse(res, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
