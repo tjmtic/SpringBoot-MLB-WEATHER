@@ -8,13 +8,14 @@ import com.example.demo.data.mlb.mapper.VenueResponseMapper
 import com.example.demo.data.mlb.mapper.VenuesResponseMapper
 import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.GamesResponse
+import com.example.demo.data.mlb.model.League
+import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.TeamServiceResponse
 import com.example.demo.data.mlb.model.TeamsResponse
 import com.example.demo.data.mlb.model.VenueResponse
 import com.example.demo.data.mlb.model.VenuesResponse
 import com.example.demo.service.mlb.request.league.LeagueRequestImpl
-import com.example.demo.service.mlb.request.league.LeaguesResponse
-import com.example.demo.service.mlb.request.league.LeaguesServiceResponse
+import com.example.demo.service.mlb.request.sport.SportRequestImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -35,15 +36,24 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
     }
 
     private val leagueRequests = LeagueRequestImpl(webClient)
+    private val sportRequests = SportRequestImpl(webClient)
 
     private val logger: Logger = LoggerFactory.getLogger(DemoController::class.java)
 
-    fun getLeagues(): LeaguesResponse {
+    fun getLeagues(): MlbServiceResponse<List<League>> {
         return leagueRequests.getLeagues()
     }
 
-    fun getLeague(id: String): LeaguesResponse {
+    fun getLeague(id: String): MlbServiceResponse<League> {
         return leagueRequests.getLeague(id)
+    }
+
+    fun getSports(): MlbServiceResponse<List<Sport>> {
+        return sportRequests.getSports()
+    }
+
+    fun getSport(id: String): MlbServiceResponse<Sport> {
+        return sportRequests.getSport(id)
     }
 
     override fun getTeam(id: String): MlbServiceResponse<TeamServiceResponse> {

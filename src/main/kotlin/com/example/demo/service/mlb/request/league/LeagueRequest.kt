@@ -1,6 +1,9 @@
 package com.example.demo.service.mlb.request.league
 
+import com.example.demo.data.mlb.model.League
+import com.example.demo.service.mlb.MlbServiceResponse
+
 interface LeagueRequest {
-    fun getLeagues(): LeaguesResponse
-    fun getLeague(id: String): LeaguesResponse
+    fun getLeagues(): MlbServiceResponse<List<League>>
+    fun getLeague(id: String): MlbServiceResponse<League>
 }

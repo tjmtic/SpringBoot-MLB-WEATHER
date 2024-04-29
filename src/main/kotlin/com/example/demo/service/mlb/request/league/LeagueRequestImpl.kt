@@ -1,8 +1,10 @@
 package com.example.demo.service.mlb.request.league
 
-import com.example.demo.data.mlb.mapper.LeaguesResponseMapper
+import com.example.demo.data.mlb.mapper.ResponseMapper
+import com.example.demo.data.mlb.model.League
 import com.example.demo.service.mlb.MlbServiceException
 import com.example.demo.service.mlb.MlbServiceImpl
+import com.example.demo.service.mlb.MlbServiceResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
@@ -12,7 +14,7 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
         const val PATH_NAME = "league"
     }
 
-    override fun getLeagues(): LeaguesResponse {
+    override fun getLeagues(): MlbServiceResponse<List<League>> {
         try {
             return getLeaguesRequest().block() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE)
         } catch (e: MlbServiceException){
@@ -22,19 +24,19 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
         }
     }
 
-    private fun getLeaguesRequest(): Mono<LeaguesResponse> {
+    private fun getLeaguesRequest(): Mono<MlbServiceResponse<List<League>>> {
 
         return webClient.get()
             .uri(PATH_NAME)
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ LeaguesResponseMapper.mapLeagues(it) }
+            .map{ ResponseMapper<List<League>>().map<List<League>>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
     }
 
-    override fun getLeague(id: String): LeaguesResponse {
+    override fun getLeague(id: String): MlbServiceResponse<League> {
         try {
             return getLeagueRequest(id).block() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE)
         } catch (e: MlbServiceException){
@@ -44,13 +46,13 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
         }
     }
 
-    private fun getLeagueRequest(id: String): Mono<LeaguesResponse> {
+    private fun getLeagueRequest(id: String): Mono<MlbServiceResponse<League>> {
 
         return webClient.get()
             .uri("${PATH_NAME}/$id")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ LeaguesResponseMapper.mapLeagues(it) }
+            .map{ ResponseMapper<League>().map<League>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }

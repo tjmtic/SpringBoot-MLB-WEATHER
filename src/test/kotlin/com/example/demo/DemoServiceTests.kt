@@ -28,6 +28,7 @@ import com.example.demo.data.demo.validation.DateValidator
 import com.example.demo.data.demo.validation.ValidationState
 import com.example.demo.service.demo.DemoServiceException
 import com.example.demo.service.mlb.MlbServiceException
+import com.example.demo.service.mlb.MlbServiceResponse
 
 @SpringBootTest
 class DemoServiceTests {
@@ -62,10 +63,10 @@ class DemoServiceTests {
     @BeforeEach
     fun setupMocks(){
         // Define the behavior of the mocked client
-        Mockito.`when`(mlbService.getVenue("1")).thenReturn(mockedVenueResponse)
+        Mockito.`when`(mlbService.getVenue("1")).thenReturn(MlbServiceResponse(mockedVenueResponse, null))
         Mockito.`when`(mlbService.getVenue("2")).thenReturn(null)
         Mockito.`when`(weatherService.getForecastForLocation(0.0, 0.0)).thenReturn(mockedForecastResponse)
-        Mockito.`when`(mlbService.getVenueForGame("1", "2022-01-02")).thenReturn(mockedGameVenueResponse)
+        Mockito.`when`(mlbService.getVenueForGame("1", "2022-01-02")).thenReturn(MlbServiceResponse(mockedGameVenueResponse, null))
     }
 
     @Test
