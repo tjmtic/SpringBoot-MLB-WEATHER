@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -224,7 +226,19 @@ class DemoController(val demoService: DemoServiceImpl,
             ResponseEntity.status(400).body(ServiceResponse(null, ServiceException(ERROR_UNKNOWN)))
         }
     }
-}
 
+    @PostMapping("/postDivisions/")
+    fun postDivisions(@RequestBody request: IdRequest): ResponseEntity<ServiceResponse<Division?>> {
+        return try {
+            val res : Division? = mlbService.divisionRequests.postDivision(request.id)
+            ResponseEntity.ok(ServiceResponse(res, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException(ERROR_UNKNOWN)))
+        }
+    }
+}
+data class IdRequest(val id: String)
 data class ServiceResponse<T>(val result: T?, val error: ServiceException?)
 class ServiceException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
