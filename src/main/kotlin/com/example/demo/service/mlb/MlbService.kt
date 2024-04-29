@@ -15,7 +15,7 @@ interface MlbService {
      * Returns:
      * - TeamResponse: An object containing information about the team associated with the specified MLB entity.
      */
-    fun getTeam(id: String): MlbServiceResponse<Team>
+    //fun getTeam(id: String): MlbServiceResponse<Team>
 
     /**
      * Action: Retrieve teams associated with MLB.
@@ -23,7 +23,7 @@ interface MlbService {
      * Returns:
      * - TeamResponse: An object containing information about the teams associated with the MLB.
      */
-    fun getTeams(): MlbServiceResponse<List<Team>>
+    //fun getTeams(): MlbServiceResponse<List<Team>>
     /**
      * Action: Retrieve venue associated with a specific MLB identifier.
      * Parameters:
