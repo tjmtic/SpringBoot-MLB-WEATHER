@@ -7,6 +7,7 @@ import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.core.serializer.support.SerializationFailedException
 
@@ -19,7 +20,15 @@ class ResponseMapper<T> {
             Sport::class -> mapListForNode("sports", json, {nodeJson -> SportMapper.mapSport(nodeJson) }) as List<R?>
             Division::class -> mapListForNode("divisions", json, {nodeJson -> DivisionMapper.mapDivision(nodeJson) }) as List<R?>
 
-            Game::class -> mapListForNode("games", json, { nodeJson -> GameMapper.mapGame(nodeJson) }) as List<R>
+            Game::class -> {
+                val objectMapper = ObjectMapper()
+                val responseNode = objectMapper.readTree(json)
+
+                //Isolate Node for ItemList
+                val listNode = responseNode["dates"].first()
+                println(listNode.toString())
+                mapListForNode("games", listNode.toString(), { nodeJson -> GameMapper.mapGame(nodeJson) })  as List<R>
+            }
             Venue::class -> mapListForNode("venues", json, { nodeJson -> VenueMapper.mapVenue(nodeJson) }) as List<R>
 
             else -> throw IllegalArgumentException("Unsupported type: ${R::class.simpleName}")
@@ -38,7 +47,22 @@ class ResponseMapper<T> {
             return listNode.map { mapIt(it.toString()) }
 
         } catch (e: JsonProcessingException) {
-            throw SerializationFailedException("ListNode Serialization Error", e)
+            throw SerializationFailedException("ListNode Serialization Error ${e.message}", e)
         }
+    }
+
+        fun <T> mapFromNode(node: String, json: String, mapList: (String) -> List<T>): List<T> {
+            try {
+                val objectMapper = ObjectMapper()
+                val responseNode = objectMapper.readTree(json)
+
+                //Isolate Node for ItemList
+                val listNode = responseNode[node]
+
+                return mapList(listNode.toString())
+
+            } catch (e: JsonProcessingException) {
+                throw SerializationFailedException("ListNode Serialization Error", e)
+            }
     }
 }

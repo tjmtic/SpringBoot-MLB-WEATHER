@@ -6,14 +6,18 @@ import com.example.demo.data.demo.validation.DateValidator
 import com.example.demo.data.demo.validation.ValidId
 import com.example.demo.data.demo.validation.ValidationState
 import com.example.demo.data.mlb.model.Division
+import com.example.demo.data.mlb.model.Game
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
+import com.example.demo.data.weather.model.ForecastResponse
+import com.example.demo.data.weather.model.Period
 import com.example.demo.service.demo.DemoServiceException
 import com.example.demo.service.demo.DemoServiceImpl
 import com.example.demo.service.mlb.MlbServiceException
 import com.example.demo.service.mlb.MlbServiceImpl
+import com.example.demo.service.weather.WeatherServiceImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class DemoController(val demoService: DemoServiceImpl,
                      val mlbService: MlbServiceImpl,
+                     val weatherService: WeatherServiceImpl,
     ) {
 
     companion object {
@@ -231,6 +236,30 @@ class DemoController(val demoService: DemoServiceImpl,
     fun postDivisions(@RequestBody request: IdRequest): ResponseEntity<ServiceResponse<Division?>> {
         return try {
             val res : Division? = mlbService.divisionRequests.postDivision(request.id)
+            ResponseEntity.ok(ServiceResponse(res, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getGames/{id}")
+    fun getGames(@PathVariable @ValidId id: String): ResponseEntity<ServiceResponse<List<Game>>> {
+        return try {
+            val res : List<Game> = mlbService.gameRequests.getGames(id, "2024-02-28", "2024-12-28")
+            ResponseEntity.ok(ServiceResponse(res, null))
+        } catch (e: MlbServiceException){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))
+        } catch (e: Exception){
+            ResponseEntity.status(400).body(ServiceResponse(null, ServiceException(ERROR_UNKNOWN)))
+        }
+    }
+
+    @GetMapping("/getForecast/{lat}/{lon}")
+    fun getForecast(@PathVariable lat: Double, @PathVariable lon: Double): ResponseEntity<ServiceResponse<ForecastResponse>> {
+        return try {
+            val res : ForecastResponse = weatherService.getForecastForLocation(lat, lon)
             ResponseEntity.ok(ServiceResponse(res, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(ServiceResponse(null, ServiceException("Service Error - ${e.message}")))

@@ -38,12 +38,18 @@ class GameRequestImpl(val webClient: WebClient) {
             .buildAndExpand(id)
             .toUri()
 
+        println("REQUESTING FULL URL OF: ${uriFull}")
+
+        //schedule?scheduleTypes=games&sportIds=1&teamIds=121&startDate=2024-03-28&endDate=2024-03-28
+        //schedule?scheduleTypes=games&sportIds=1&teamIds=121&startDate=2024-03-28&endDate=2024-03-28
+
         return webClient.get()
-            .uri(uriFull)
+            .uri("$PATH_NAME?scheduleTypes=games&sportIds=1&teamIds=$id&startDate=$startDate&endDate=$endDate")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ ResponseMapper<Game>().map<Game>(it) }
+            .map{ println("RESPONSE NO ERROR $it"); ResponseMapper<Game>().map<Game>(it) }
             .onErrorMap {
+                println("ERRROR ${it.message}")
                 MlbServiceException("${it.message}", it)
             }
 
