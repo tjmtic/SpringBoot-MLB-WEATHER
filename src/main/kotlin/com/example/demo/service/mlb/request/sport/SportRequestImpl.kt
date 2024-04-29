@@ -4,7 +4,6 @@ import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.service.mlb.MlbServiceException
 import com.example.demo.service.mlb.MlbServiceImpl
-import com.example.demo.service.mlb.MlbServiceResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
@@ -15,11 +14,11 @@ class SportRequestImpl(val webClient: WebClient): SportRequest {
         const val NOT_FOUND = "Sport: Not Found"
     }
 
-    override fun getSports(): MlbServiceResponse<List<Sport>> {
+    override fun getSports(): List<Sport> {
         try {
-            return MlbServiceResponse( getSportsRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND), null)
+            return getSportsRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
-            throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
+            throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
             throw MlbServiceException("${e.message}", e)
         }
@@ -37,11 +36,11 @@ class SportRequestImpl(val webClient: WebClient): SportRequest {
             }
     }
 
-    override fun getSport(id: String): MlbServiceResponse<Sport> {
+    override fun getSport(id: String): Sport {
         try {
-            return MlbServiceResponse( getSportRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND), null)
+            return getSportRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
-            throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
+            throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
             throw MlbServiceException("${e.message}", e)
         }

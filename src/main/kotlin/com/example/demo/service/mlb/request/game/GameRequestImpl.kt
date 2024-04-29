@@ -3,8 +3,6 @@ package com.example.demo.service.mlb.request.game
 import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.Game
 import com.example.demo.service.mlb.MlbServiceException
-import com.example.demo.service.mlb.MlbServiceImpl
-import com.example.demo.service.mlb.MlbServiceResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
@@ -14,19 +12,15 @@ class GameRequestImpl(val webClient: WebClient) {
         const val PATH_NAME = "schedule"
         const val NOT_FOUND = "Game: Not Found"
     }
-    fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<List<Game>> {
+    fun getGames(id: String, startDate: String, endDate: String) : List<Game> {
         return try {
-            MlbServiceResponse(
-                getGamesRequest(id, startDate, endDate).block()?.filterNotNull() ?: throw MlbServiceException(
-                    NOT_FOUND
-                ),
-                null)
+                getGamesRequest(id, startDate, endDate).block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
-            //throw MlbServiceException(NOT_FOUND_GAME, e)
-            MlbServiceResponse(null, MlbServiceException(NOT_FOUND))
+            throw MlbServiceException(NOT_FOUND, e)
+            //MlbServiceResponse(null, MlbServiceException(NOT_FOUND))
         } catch(e: Exception){
-            //throw MlbServiceException("${e.message}", e)
-            MlbServiceResponse(null, MlbServiceException("${e.message}", e))
+            throw MlbServiceException("${e.message}", e)
+            //MlbServiceResponse(null, MlbServiceException("${e.message}", e))
         }
     }
 

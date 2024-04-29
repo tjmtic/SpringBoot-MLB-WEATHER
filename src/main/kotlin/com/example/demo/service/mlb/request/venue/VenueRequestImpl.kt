@@ -3,8 +3,6 @@ package com.example.demo.service.mlb.request.venue
 import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.Venue
 import com.example.demo.service.mlb.MlbServiceException
-import com.example.demo.service.mlb.MlbServiceImpl
-import com.example.demo.service.mlb.MlbServiceResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
@@ -15,11 +13,9 @@ class VenueRequestImpl(val webClient: WebClient) {
         const val NOT_FOUND = "Venue: Not Found"
     }
 
-    fun getVenues(): MlbServiceResponse<List<Venue>> {
+    fun getVenues(): List<Venue> {
         try {
-            return MlbServiceResponse(getVenuesRequest().block()?.filterNotNull() ?: throw MlbServiceException(
-                NOT_FOUND
-            ), null)
+            return getVenuesRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND, e)
         } catch (e: Exception){
@@ -39,11 +35,9 @@ class VenueRequestImpl(val webClient: WebClient) {
             }
     }
 
-    fun getVenue(id: String): MlbServiceResponse<Venue> {
+    fun getVenue(id: String): Venue {
         try {
-            return MlbServiceResponse(getVenueRequest(id).block()?.first() ?: throw MlbServiceException(
-                NOT_FOUND
-            ), null)
+            return getVenueRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND, e)
         } catch (e: Exception){

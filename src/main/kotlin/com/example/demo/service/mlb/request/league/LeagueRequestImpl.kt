@@ -3,8 +3,6 @@ package com.example.demo.service.mlb.request.league
 import com.example.demo.data.mlb.mapper.ResponseMapper
 import com.example.demo.data.mlb.model.League
 import com.example.demo.service.mlb.MlbServiceException
-import com.example.demo.service.mlb.MlbServiceImpl
-import com.example.demo.service.mlb.MlbServiceResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
@@ -15,9 +13,9 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
         const val NOT_FOUND = "League: Not Found"
     }
 
-    override fun getLeagues(): MlbServiceResponse<List<League>> {
+    override fun getLeagues(): List<League> {
         try {
-            return MlbServiceResponse(getLeaguesRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND), null)
+            return getLeaguesRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
@@ -37,9 +35,9 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
             }
     }
 
-    override fun getLeague(id: String): MlbServiceResponse<League> {
+    override fun getLeague(id: String): League {
         try {
-            return MlbServiceResponse(getLeagueRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND), null)
+            return getLeagueRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
