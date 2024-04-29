@@ -3,19 +3,12 @@ package com.example.demo.service.mlb
 import com.example.demo.controller.DemoController
 import com.example.demo.data.mlb.mapper.GamesResponseMapper
 import com.example.demo.data.mlb.mapper.ResponseMapper
-import com.example.demo.data.mlb.mapper.TeamResponseMapper
-import com.example.demo.data.mlb.mapper.TeamsResponseMapper
-import com.example.demo.data.mlb.mapper.VenueResponseMapper
-import com.example.demo.data.mlb.mapper.VenuesResponseMapper
 import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.GamesResponse
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
 import com.example.demo.data.mlb.model.Team
-import com.example.demo.data.mlb.model.TeamServiceResponse
-import com.example.demo.data.mlb.model.TeamsResponse
-import com.example.demo.data.mlb.model.VenueResponse
-import com.example.demo.data.mlb.model.VenuesResponse
+import com.example.demo.data.mlb.model.Venue
 import com.example.demo.service.mlb.request.league.LeagueRequestImpl
 import com.example.demo.service.mlb.request.sport.SportRequestImpl
 import org.slf4j.Logger
@@ -107,9 +100,9 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
             }
     }
 
-    override fun getVenues(): MlbServiceResponse<VenuesResponse> {
+    override fun getVenues(): MlbServiceResponse<List<Venue>> {
         try {
-            return MlbServiceResponse(getVenuesRequest().block() ?: throw MlbServiceException(NOT_FOUND_VENUE), null)
+            return MlbServiceResponse(getVenuesRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND_VENUE), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND_VENUE, e)
         } catch (e: Exception){
@@ -117,21 +110,21 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         }
     }
 
-    private fun getVenuesRequest(): Mono<VenuesResponse> {
+    private fun getVenuesRequest(): Mono<List<Venue?>> {
 
         return webClient.get()
             .uri("venues/")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ VenuesResponseMapper.mapVenues(it) }
+            .map{ ResponseMapper<Venue>().map<Venue>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
     }
 
-    override fun getVenue(id: String): MlbServiceResponse<VenueResponse> {
+    override fun getVenue(id: String): MlbServiceResponse<Venue> {
         try {
-            return MlbServiceResponse(getVenueRequest(id).block() ?: throw MlbServiceException(NOT_FOUND_VENUE), null)
+            return MlbServiceResponse(getVenueRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND_VENUE), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(NOT_FOUND_VENUE, e)
         } catch (e: Exception){
@@ -139,13 +132,13 @@ class MlbServiceImpl(@Qualifier("MlbWebClient") val webClient: WebClient) : MlbS
         }
     }
 
-    private fun getVenueRequest(id: String): Mono<VenueResponse> {
+    private fun getVenueRequest(id: String): Mono<List<Venue?>> {
 
         return webClient.get()
             .uri("venues/$id?hydrate=location")
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ VenueResponseMapper.mapVenues(it) }
+            .map{ ResponseMapper<Venue>().map<Venue>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
