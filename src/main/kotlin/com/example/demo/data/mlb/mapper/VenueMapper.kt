@@ -14,9 +14,16 @@ object VenueMapper {
             val id = venueNode["id"].asInt()
             val name = venueNode["name"].asText()
             val link = venueNode["link"].asText()
-            val location = LocationMapper.mapLocation(venueNode["location"].toString())
+            val locationNode = venueNode["location"]
+            val location = when(locationNode) {
+                null -> null
+                else -> LocationMapper.mapLocation(locationNode.toString())
+            }
 
-            return Venue(id, name, link, location)
+            val active = venueNode["active"]?.asBoolean()
+            val season = venueNode["season"]?.asText()
+
+            return Venue(id, name, link, location, active, season)
         } catch(e: JsonProcessingException){
             throw SerializationFailedException("Venue Serialization Error", e)
         }
