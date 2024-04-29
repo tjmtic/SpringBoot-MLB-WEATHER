@@ -12,13 +12,14 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
 
     companion object {
         const val PATH_NAME = "league"
+        const val NOT_FOUND = "League: Not Found"
     }
 
     override fun getLeagues(): MlbServiceResponse<List<League>> {
         try {
-            return MlbServiceResponse(getLeaguesRequest().block()?.filterNotNull() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE), null)
+            return MlbServiceResponse(getLeaguesRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND), null)
         } catch (e: MlbServiceException){
-            throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
+            throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
             throw MlbServiceException("${e.message}", e)
         }
@@ -38,9 +39,9 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
 
     override fun getLeague(id: String): MlbServiceResponse<League> {
         try {
-            return MlbServiceResponse(getLeagueRequest(id).block()?.first() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE), null)
+            return MlbServiceResponse(getLeagueRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND), null)
         } catch (e: MlbServiceException){
-            throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
+            throw MlbServiceException(NOT_FOUND + e.message, e)
         } catch (e: Exception){
             throw MlbServiceException("${e.message}", e)
         }

@@ -2,7 +2,6 @@ package com.example.demo
 
 import com.example.demo.data.demo.model.VenueForecastResponse
 import com.example.demo.data.demo.model.GameDateResponse
-import com.example.demo.data.mlb.model.GameResponse
 import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.DefaultCoordinates
 import com.example.demo.data.mlb.model.Game

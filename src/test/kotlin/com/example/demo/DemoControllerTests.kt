@@ -6,8 +6,6 @@ import com.example.demo.data.demo.model.VenueForecastResponse
 import com.example.demo.data.demo.validation.DateValidator
 import com.example.demo.data.mlb.model.DefaultCoordinates
 import com.example.demo.data.mlb.model.Game
-import com.example.demo.data.mlb.model.GameResponse
-import com.example.demo.data.mlb.model.GameVenueResponse
 import com.example.demo.data.mlb.model.Venue
 import com.example.demo.data.mlb.model.VenueLocation
 import com.example.demo.data.weather.model.ForecastResponse

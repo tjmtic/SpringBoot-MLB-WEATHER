@@ -1,7 +1,7 @@
 package com.example.demo.service.mlb
 
+import com.example.demo.data.mlb.model.Game
 import com.example.demo.data.mlb.model.GameVenueResponse
-import com.example.demo.data.mlb.model.GamesResponse
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
 
@@ -50,7 +50,7 @@ interface MlbService {
      * Returns:
      * - GamesResponse: An object containing information about the MLB games within the specified date range.
      */
-    fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<GamesResponse>
+    fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<List<Game>>
 
     /**
      * Action: Retrieve venue information associated with a specific MLB game.
