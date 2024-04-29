@@ -15,6 +15,7 @@ import com.example.demo.service.demo.DemoServiceException
 import com.example.demo.service.demo.DemoServiceImpl
 import com.example.demo.service.mlb.MlbServiceException
 import com.example.demo.service.mlb.MlbServiceImpl
+import com.example.demo.service.mlb.MlbServiceResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -95,7 +96,7 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getVenues/")
     fun getVenues(): ResponseEntity<String> {
         return try {
-            val res : VenuesResponse = mlbService.getVenues()
+            val res : MlbServiceResponse<VenuesResponse> = mlbService.getVenues()
             ResponseEntity.ok(res.toString())
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body("Service Error - ${e.message}")
@@ -107,7 +108,7 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getVenue/{id}")
     fun getVenue(@PathVariable @ValidId id: String): ResponseEntity<String> {
         return try {
-            val res : VenueResponse = mlbService.getVenue(id)
+            val res : MlbServiceResponse<VenueResponse> = mlbService.getVenue(id)
             ResponseEntity.ok(res.toString())
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body("Service Error - ${e.message}")
@@ -120,9 +121,9 @@ class DemoController(val demoService: DemoServiceImpl,
     fun getTeams(): ResponseEntity<String> {
         logger.debug("Entering getTeams:")
         return try {
-            val res : TeamsResponse = mlbService.getTeams()
+            val res : MlbServiceResponse<TeamsResponse> = mlbService.getTeams()
             logger.debug(":Exiting getTeams.")
-            ResponseEntity.ok(res.toString())
+            ResponseEntity.ok(res.result.toString())
         } catch (e: MlbServiceException){
             logger.debug("MlbService Error:", e)
             ResponseEntity.status(400).body("Service Error - ${e.message}")
@@ -135,8 +136,8 @@ class DemoController(val demoService: DemoServiceImpl,
     @GetMapping("/getTeam/{id}")
     fun getTeam(@PathVariable @ValidId id: String): ResponseEntity<TeamResponse> {
         return try {
-            val res : TeamServiceResponse = mlbService.getTeam(id)
-            ResponseEntity.ok(TeamResponse(res.team, null))
+            val res : MlbServiceResponse<TeamServiceResponse> = mlbService.getTeam(id)
+            ResponseEntity.ok(TeamResponse(res.result!!.team, null))
         } catch (e: MlbServiceException){
             ResponseEntity.status(400).body(TeamResponse(null, "Service Error - ${e.message}"))
         } catch (e: Exception){

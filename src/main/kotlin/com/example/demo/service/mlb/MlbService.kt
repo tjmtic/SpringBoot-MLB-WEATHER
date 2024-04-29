@@ -9,6 +9,7 @@ import com.example.demo.data.mlb.model.VenuesResponse
 
 interface MlbService {
 
+
     /**
      * Action: Retrieve team associated with a specific MLB identifier.
      * Parameters:
@@ -16,7 +17,7 @@ interface MlbService {
      * Returns:
      * - TeamResponse: An object containing information about the team associated with the specified MLB entity.
      */
-    fun getTeam(id: String): TeamServiceResponse
+    fun getTeam(id: String): MlbServiceResponse<TeamServiceResponse>
 
     /**
      * Action: Retrieve teams associated with MLB.
@@ -24,7 +25,7 @@ interface MlbService {
      * Returns:
      * - TeamResponse: An object containing information about the teams associated with the MLB.
      */
-    fun getTeams(): TeamsResponse
+    fun getTeams(): MlbServiceResponse<TeamsResponse>
     /**
      * Action: Retrieve venue associated with a specific MLB identifier.
      * Parameters:
@@ -32,7 +33,7 @@ interface MlbService {
      * Returns:
      * - VenueResponse: An object containing information about the venues associated with the specified MLB entity.
      */
-    fun getVenue(id: String): VenueResponse
+    fun getVenue(id: String): MlbServiceResponse<VenueResponse>
 
     /**
      * Action: Retrieve venues associated with MLB.
@@ -40,7 +41,7 @@ interface MlbService {
      * Returns:
      * - VenueResponse: An object containing information about the venues associated with the MLB.
      */
-    fun getVenues(): VenuesResponse
+    fun getVenues(): MlbServiceResponse<VenuesResponse>
 
     /**
      * Action: Retrieve MLB games within a specified date range.
@@ -51,7 +52,7 @@ interface MlbService {
      * Returns:
      * - GamesResponse: An object containing information about the MLB games within the specified date range.
      */
-    fun getGames(id: String, startDate: String, endDate: String) : GamesResponse
+    fun getGames(id: String, startDate: String, endDate: String) : MlbServiceResponse<GamesResponse>
 
     /**
      * Action: Retrieve venue information associated with a specific MLB game.
@@ -61,5 +62,7 @@ interface MlbService {
      * Returns:
      * - GameVenueResponse: An object containing venue information associated with the specified MLB game.
      */
-    fun getVenueForGame(id:String, date:String): GameVenueResponse
+    fun getVenueForGame(id:String, date:String): MlbServiceResponse<GameVenueResponse>
 }
+data class MlbServiceResponse<T>(val result: T?, val error: MlbServiceException?)
+class MlbServiceException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)

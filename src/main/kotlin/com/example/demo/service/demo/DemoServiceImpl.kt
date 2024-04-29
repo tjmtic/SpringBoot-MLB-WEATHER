@@ -30,11 +30,11 @@ class DemoServiceImpl(val mlbService: MlbServiceImpl, val weatherService: Weathe
 
                 logger.debug("Returning getForecastForVenue($id):")
 
-                val lat = venueResponse.venue.venueLocation.defaultCoordinates.latitude
-                val lon = venueResponse.venue.venueLocation.defaultCoordinates.longitude
+                val lat = venueResponse.result!!.venue.venueLocation.defaultCoordinates.latitude
+                val lon = venueResponse.result!!.venue.venueLocation.defaultCoordinates.longitude
 
                 VenueForecastResponse(
-                    venueResponse.venue,
+                    venueResponse.result!!.venue,
                     weatherService.getForecastForLocation(lat, lon)
                 )
             }
@@ -56,10 +56,10 @@ class DemoServiceImpl(val mlbService: MlbServiceImpl, val weatherService: Weathe
 
                 logger.debug("Returning getGamesByDate($id , $date):")
 
-                val lat = response.venue.venue.venueLocation.defaultCoordinates.latitude
-                val lon = response.venue.venue.venueLocation.defaultCoordinates.longitude
+                val lat = response.result!!.venue.venue.venueLocation.defaultCoordinates.latitude
+                val lon = response.result!!.venue.venue.venueLocation.defaultCoordinates.longitude
 
-                GameDateResponse(date, response.game,
+                GameDateResponse(date, response.result!!.game,
                     weatherService.getForecastForLocation(lat, lon)
                 )
             }
