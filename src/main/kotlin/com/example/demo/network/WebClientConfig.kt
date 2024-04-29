@@ -16,6 +16,10 @@ class WebClientConfig {
     private lateinit var mlbUrl: String
     @Autowired
     private lateinit var weatherUrl: String
+    @Autowired
+    private lateinit var fbUrl: String
+    @Autowired
+    private lateinit var fbToken: String
 
     @Bean
     fun MlbWebClient(): WebClient {
@@ -30,6 +34,14 @@ class WebClientConfig {
         return WebClient.builder()
             .exchangeStrategies(strategies)
             .baseUrl(weatherUrl)
+            .build()
+    }
+
+    @Bean
+    fun FbWebClient(): WebClient {
+        return WebClient.builder()
+            .exchangeStrategies(strategies)
+            .baseUrl(fbUrl)
             .build()
     }
 
