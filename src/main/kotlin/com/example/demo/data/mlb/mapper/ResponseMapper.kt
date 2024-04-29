@@ -4,7 +4,6 @@ import com.example.demo.data.mlb.model.Division
 import com.example.demo.data.mlb.model.Game
 import com.example.demo.data.mlb.model.League
 import com.example.demo.data.mlb.model.Sport
-import com.example.demo.data.mlb.model.StandardMapping
 import com.example.demo.data.mlb.model.Team
 import com.example.demo.data.mlb.model.Venue
 import com.fasterxml.jackson.core.JsonProcessingException
@@ -33,12 +32,12 @@ class ResponseMapper<T> {
             val objectMapper = ObjectMapper()
             val responseNode = objectMapper.readTree(json)
 
+            //Isolate Node for ItemList
             val listNode = responseNode[node]
-            val list = listNode.map { mapIt(it.toString()) }
 
-            return list
+            return listNode.map { mapIt(it.toString()) }
 
-        } catch(e: JsonProcessingException){
+        } catch (e: JsonProcessingException) {
             throw SerializationFailedException("ListNode Serialization Error", e)
         }
     }
