@@ -16,7 +16,7 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
 
     override fun getLeagues(): MlbServiceResponse<List<League>> {
         try {
-            return getLeaguesRequest().block() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE)
+            return MlbServiceResponse(getLeaguesRequest().block()?.filterNotNull() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
         } catch (e: Exception){
@@ -24,13 +24,13 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
         }
     }
 
-    private fun getLeaguesRequest(): Mono<MlbServiceResponse<List<League>>> {
+    private fun getLeaguesRequest(): Mono<List<League?>> {
 
         return webClient.get()
             .uri(PATH_NAME)
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ ResponseMapper<List<League>>().map<List<League>>(it) }
+            .map{ ResponseMapper<League>().map<League>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
@@ -38,7 +38,7 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
 
     override fun getLeague(id: String): MlbServiceResponse<League> {
         try {
-            return getLeagueRequest(id).block() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE)
+            return MlbServiceResponse(getLeagueRequest(id).block()?.first() ?: throw MlbServiceException(MlbServiceImpl.NOT_FOUND_LEAGUE), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
         } catch (e: Exception){
@@ -46,7 +46,7 @@ class LeagueRequestImpl(val webClient: WebClient): LeagueRequest {
         }
     }
 
-    private fun getLeagueRequest(id: String): Mono<MlbServiceResponse<League>> {
+    private fun getLeagueRequest(id: String): Mono<List<League?>> {
 
         return webClient.get()
             .uri("${PATH_NAME}/$id")

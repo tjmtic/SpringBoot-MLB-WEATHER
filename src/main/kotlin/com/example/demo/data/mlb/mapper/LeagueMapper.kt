@@ -8,61 +8,47 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.core.serializer.support.SerializationFailedException
 
 object LeagueMapper {
-    fun mapLeague(json: String): League {
+    fun mapLeague(json: String): League? {
         try {
             val objectMapper = ObjectMapper()
-            val teamNode = objectMapper.readTree(json)
+            val leagueNode = objectMapper.readTree(json)
+            val teamNode = leagueNode//["leagues"]
+
+            println("MAPPING LEAGUE: $json")
 
             val id = teamNode["id"].asInt()
             val name = teamNode["name"].asText()
             val link = teamNode["link"].asText()
-            val venueId = teamNode["venue"]["id"].asInt()
-            val allStarStatus = teamNode["allStarStatus"].asText()
-            val season = teamNode["season"].asInt()
-            val teamCode = teamNode["teamCode"].asText()
-            val fileCode = teamNode["fileCode"].asText()
             val abbreviation = teamNode["abbreviation"].asText()
-            val teamName = teamNode["teamName"].asText()
-            val locationName = teamNode["locationName"].asText()
-            val firstYearOfPlay = teamNode["firstYearOfPlay"].asText()
-            val leagueId = teamNode["league"]["id"].asInt()
-            val divisionId = teamNode["division"]["id"].asInt()
+            val nameShort = teamNode["name"].asText()
+            val seasonState = teamNode["seasonState"].asText()
+            val hasWildCard = teamNode["hasWildCard"].asBoolean()
+            val hasSplitSeason = teamNode["hasSplitSeason"].asBoolean()
+            val numGames = teamNode["numGames"].asInt()
+            val hasPlayoffPoints = teamNode["hasPlayoffPoints"].asBoolean()
+            val numTeams = teamNode["numTeams"].asInt()
+            val numWildcardTeams = teamNode["numWildcardTeams"].asInt()
+            val season = teamNode["season"].asText()
+            val orgCode = teamNode["orgCode"].asText()
+            val conferencesInUse = teamNode["conferencesInUse"].asBoolean()
+            val divisionsInUse = teamNode["divisionsInUse"].asBoolean()
             val sportId = teamNode["sport"]["id"].asInt()
-            val shortName = teamNode["shortName"].asText()
-            val parentOrgName = teamNode["parentOrgName"].asText()
-            val parentOrgId = teamNode["parentOrgId"].asInt()
-            val franchiseName = teamNode["franchiseName"].asText()
-            val clubName = teamNode["clubName"].asText()
+            val sortOrder = teamNode["sortOrder"].asInt()
             val active = teamNode["active"].asBoolean()
 
 
-            return League(id,
-                name,
-                link,
-                allStarStatus,
-                teamCode,
-                fileCode,
-                false,
-                false,
-                0,
-                false,
-                leagueId,
-                divisionId,
-                "sportId",
-                shortName,
-                false,
-                false,
-                0,
-                0,
-                active)
+            return League(id, name, link, abbreviation, nameShort, seasonState, hasWildCard, hasSplitSeason, numGames, hasPlayoffPoints, numTeams,
+                numWildcardTeams, season, orgCode, conferencesInUse, divisionsInUse, sportId, sortOrder, active)
 
         } catch(e: JsonProcessingException){
-            throw SerializationFailedException("Team Serialization Failure", e)
+            return null
+            //throw SerializationFailedException("League Serialization Failure", e)
         }
         //TODO :
         // Double-Check this error propagation
         catch(e: Exception){
-            throw SerializationFailedException("Team Serialization Error", e)
+            return null
+            //throw SerializationFailedException("League Serialization Error ${e.message}", e)
         }
     }
 }

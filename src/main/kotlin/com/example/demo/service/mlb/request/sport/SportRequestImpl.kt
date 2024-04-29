@@ -11,13 +11,13 @@ import reactor.core.publisher.Mono
 class SportRequestImpl(val webClient: WebClient): SportRequest {
 
     companion object {
-        const val PATH_NAME = "sport"
+        const val PATH_NAME = "sports"
         const val NOT_FOUND = "Sport: Not Found"
     }
 
     override fun getSports(): MlbServiceResponse<List<Sport>> {
         try {
-            return getSportsRequest().block() ?: throw MlbServiceException(NOT_FOUND)
+            return MlbServiceResponse( getSportsRequest().block()?.filterNotNull() ?: throw MlbServiceException(NOT_FOUND), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
         } catch (e: Exception){
@@ -25,13 +25,13 @@ class SportRequestImpl(val webClient: WebClient): SportRequest {
         }
     }
 
-    private fun getSportsRequest(): Mono<MlbServiceResponse<List<Sport>>> {
+    private fun getSportsRequest(): Mono<List<Sport?>> {
 
         return webClient.get()
             .uri(PATH_NAME)
             .retrieve()
             .bodyToMono(String::class.java)
-            .map{ ResponseMapper<List<Sport>>().map<List<Sport>>(it) }
+            .map{ ResponseMapper<Sport>().map<Sport>(it) }
             .onErrorMap {
                 MlbServiceException("${it.message}", it)
             }
@@ -39,7 +39,7 @@ class SportRequestImpl(val webClient: WebClient): SportRequest {
 
     override fun getSport(id: String): MlbServiceResponse<Sport> {
         try {
-            return getSportRequest(id).block() ?: throw MlbServiceException(NOT_FOUND)
+            return MlbServiceResponse( getSportRequest(id).block()?.first() ?: throw MlbServiceException(NOT_FOUND), null)
         } catch (e: MlbServiceException){
             throw MlbServiceException(MlbServiceImpl.NOT_FOUND_TEAM + e.message, e)
         } catch (e: Exception){
@@ -47,7 +47,7 @@ class SportRequestImpl(val webClient: WebClient): SportRequest {
         }
     }
 
-    private fun getSportRequest(id: String): Mono<MlbServiceResponse<Sport>> {
+    private fun getSportRequest(id: String): Mono<List<Sport?>> {
 
         return webClient.get()
             .uri("${PATH_NAME}/$id")
