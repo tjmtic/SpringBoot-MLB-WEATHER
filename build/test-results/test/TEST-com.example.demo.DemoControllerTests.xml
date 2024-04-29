@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.DemoControllerTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-02-17T06:18:52" hostname="Ts-Laptop.local" time="0.427">
+  <properties/>
+  <testcase name="Test Get VenueForecast Info - FAILURE - ID - 1()" classname="com.example.demo.DemoControllerTests" time="0.344"/>
+  <testcase name="Test Get VenueForecast Info - FAILURE - ID - 2()" classname="com.example.demo.DemoControllerTests" time="0.004"/>
+  <testcase name="Test Get GameDate Info 2 - SUCCESS()" classname="com.example.demo.DemoControllerTests" time="0.04"/>
+  <testcase name="Test Get VenueForecast Info - SUCCESS()" classname="com.example.demo.DemoControllerTests" time="0.005"/>
+  <testcase name="Test Get GameDate Info 2 - FAILURE - DATE - PAST()" classname="com.example.demo.DemoControllerTests" time="0.008"/>
+  <testcase name="Test Get GameDate Info 2 - SUCCESS - 1()" classname="com.example.demo.DemoControllerTests" time="0.006"/>
+  <testcase name="Test Get GameDate Info 2 - FAILURE - DATE - FUTURE()" classname="com.example.demo.DemoControllerTests" time="0.006"/>
+  <testcase name="Test Get GameDate Info 2 - FAILURE - ID()" classname="com.example.demo.DemoControllerTests" time="0.004"/>
+  <system-out><![CDATA[22:18:51.186 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.demo.DemoControllerTests]: DemoControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:18:51.255 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.demo.DemoApplication for test class com.example.demo.DemoControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2024-02-16T22:18:51.426-08:00  INFO 58211 --- [    Test worker] com.example.demo.DemoControllerTests     : Starting DemoControllerTests using Java 17.0.6 with PID 58211 (started by tm in /Users/tm/Downloads/demo)
+2024-02-16T22:18:51.426-08:00  INFO 58211 --- [    Test worker] com.example.demo.DemoControllerTests     : No active profile set, falling back to 1 default profile: "default"
+2024-02-16T22:18:52.561-08:00  INFO 58211 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2024-02-16T22:18:52.561-08:00  INFO 58211 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2024-02-16T22:18:52.562-08:00  INFO 58211 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2024-02-16T22:18:52.626-08:00  INFO 58211 --- [    Test worker] com.example.demo.DemoControllerTests     : Started DemoControllerTests in 1.33 seconds (process running for 1.904)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
